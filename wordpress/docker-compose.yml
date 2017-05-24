@@ -1,0 +1,45 @@
+version: '2'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  mysql:
+    container_name: wordpress-mysql
+    image: 'mysql'
+    ports:
+      - '3306:3306'
+    networks:
+      - app-tier
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=1
+      - MYSQL_DATABASE=${database}
+      - MYSQL_USER=${user}
+      - MYSQL_PASSWORD=${password}
+    volumes:
+      - ${mysql_data_dir}:/var/lib/mysql
+  phpfpm:
+    container_name: wordpress-phpfpm
+    image: 'bitnami/php-fpm:latest'
+    ports:
+      - '9000:9000'
+    networks:
+      - app-tier
+    depends_on:
+      - mysql
+    volumes:
+      - ${doc_root}:/var/www/wordpress
+  nginx:
+    container_name: wordpress-nginx
+    image: 'bitnami/nginx:latest'
+    depends_on:
+      - phpfpm
+    networks:
+      - app-tier
+    ports:
+      - '80:80'
+    volumes:
+      - ./.env.conf:/bitnami/nginx/conf/.env.conf
+      - ./wordpress.conf:/bitnami/nginx/conf/vhosts/wordpress.conf
+      - ${doc_root}:/var/www/wordpress
