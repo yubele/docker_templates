@@ -12,5 +12,5 @@ $ vim .env # Edit environments of docker container
 
 Run docker
 ```
-$ source .env && sudo docker-compose up
+$ sudo docker-compose up -d
 ```
