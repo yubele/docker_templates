@@ -1,0 +1,72 @@
+version: "3.1"
+networks:
+  app-tier:
+    driver: bridge
+services:
+  mysql:
+    container_name: multiple-wordpress-mysql
+    image: 'mysql'
+    ports:
+      - '13306:3306'
+    networks:
+      - app-tier
+    environment:
+      - MYSQL_ROOT_PASSWORD=${password}
+      - MYSQL_USER=${user}
+      - MYSQL_PASSWORD=${password}
+    volumes:
+      - ${mysql_data_dir}:/var/lib/mysql
+      - /home/ubuntu/workspace/docker_templates/multiple-wordpress/docker-entrypoint-initdb.d-sample/:/docker-entrypoint-initdb.d
+  phpfpm_1:
+    container_name: multiple-wordpress-phpfpm_1
+    image: 'bitnami/php-fpm:latest'
+    ports:
+      - '9001:9000'
+    networks:
+      - app-tier
+    depends_on:
+      - mysql
+    volumes:
+      - ${doc_root}:/var/www/wordpress
+  phpfpm_2:
+    container_name: multiple-wordpress-phpfpm_2
+    image: 'bitnami/php-fpm:latest'
+    ports:
+      - '9002:9000'
+    networks:
+      - app-tier
+    depends_on:
+      - mysql
+    volumes:
+      - ${doc_root}:/var/www/wordpress
+  phpfpm_3:
+    container_name: multiple-wordpress-phpfpm_2
+    image: 'bitnami/php-fpm:latest'
+    ports:
+      - '9003:9000'
+    networks:
+      - app-tier
+    depends_on:
+      - mysql
+    volumes:
+      - ${doc_root}:/var/www/wordpress
+  nginx:
+    container_name: wordpress-nginx
+    image: 'bitnami/nginx:latest'
+    depends_on:
+      - phpfpm_1
+      - phpfpm_2
+      - phpfpm_3
+    networks:
+      - app-tier
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./.env.conf:/bitnami/nginx/conf/env.conf
+      - ./wordpress.conf:/bitnami/nginx/conf/vhosts/wordpress.conf
+      - ${doc_root_1}:/var/www/wordpress_1
+      - ${doc_root_2}:/var/www/wordpress_2
+      - ${doc_root_3}:/var/www/wordpress_3
+      - ${ssl_certificate}:/bitnami/nginx/conf/cert.pem
+      - ${ssl_certificate_key}:/bitnami/nginx/conf/cert.key

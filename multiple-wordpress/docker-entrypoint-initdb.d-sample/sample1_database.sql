@@ -1,0 +1,1 @@
+create database sample1_database charset utf8;
