@@ -4,7 +4,7 @@ networks:
     driver: bridge
 services:
   mysql:
-    image: 'mysql'
+    image: ${mysql_image}
     ports:
       - '3306'
     networks:
@@ -15,7 +15,7 @@ services:
       - ${mysql_data_dir}:/var/lib/mysql
       - ${docker_entrypoint_initdb_d}:/docker-entrypoint-initdb.d
   phpfpm:
-    image: 'bitnami/php-fpm:latest'
+    image: ${phpfpm_image}
     ports:
       - '9000'
     networks:
@@ -27,7 +27,7 @@ services:
       - ${doc_root_2}:/var/www/wordpress_2
       - ${doc_root_3}:/var/www/wordpress_3
   nginx:
-    image: 'bitnami/nginx:latest'
+    image: ${nginx_image}
     depends_on:
       - phpfpm
     networks:
