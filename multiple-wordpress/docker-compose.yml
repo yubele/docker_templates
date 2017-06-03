@@ -7,49 +7,53 @@ services:
     container_name: multiple-wordpress-mysql
     image: 'mysql'
     ports:
-      - '13306:3306'
+      - '3306'
     networks:
       - app-tier
     environment:
-      - MYSQL_ROOT_PASSWORD=${password}
-      - MYSQL_USER=${user}
-      - MYSQL_PASSWORD=${password}
+      - MYSQL_RANDOM_ROOT_PASSWORD=1
     volumes:
       - ${mysql_data_dir}:/var/lib/mysql
-      - /home/ubuntu/workspace/docker_templates/multiple-wordpress/docker-entrypoint-initdb.d-sample/:/docker-entrypoint-initdb.d
+      - ${docker_entrypoint_initdb_d}:/docker-entrypoint-initdb.d
   phpfpm_1:
     container_name: multiple-wordpress-phpfpm_1
     image: 'bitnami/php-fpm:latest'
     ports:
-      - '9001:9000'
+      - '9000'
     networks:
       - app-tier
     depends_on:
       - mysql
     volumes:
-      - ${doc_root}:/var/www/wordpress
+      - ${doc_root_1}:/var/www/wordpress_1
+      - ${doc_root_2}:/var/www/wordpress_2
+      - ${doc_root_3}:/var/www/wordpress_3
   phpfpm_2:
     container_name: multiple-wordpress-phpfpm_2
     image: 'bitnami/php-fpm:latest'
     ports:
-      - '9002:9000'
+      - '9000'
     networks:
       - app-tier
     depends_on:
       - mysql
     volumes:
-      - ${doc_root}:/var/www/wordpress
+      - ${doc_root_1}:/var/www/wordpress_1
+      - ${doc_root_2}:/var/www/wordpress_2
+      - ${doc_root_3}:/var/www/wordpress_3
   phpfpm_3:
-    container_name: multiple-wordpress-phpfpm_2
+    container_name: multiple-wordpress-phpfpm_3
     image: 'bitnami/php-fpm:latest'
     ports:
-      - '9003:9000'
+      - '9000'
     networks:
       - app-tier
     depends_on:
       - mysql
     volumes:
-      - ${doc_root}:/var/www/wordpress
+      - ${doc_root_1}:/var/www/wordpress_1
+      - ${doc_root_2}:/var/www/wordpress_2
+      - ${doc_root_3}:/var/www/wordpress_3
   nginx:
     container_name: wordpress-nginx
     image: 'bitnami/nginx:latest'

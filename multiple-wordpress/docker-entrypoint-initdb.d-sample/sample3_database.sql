@@ -1,1 +1,1 @@
-create database sample2_database charset utf8;
+create database sample3_database charset utf8;
