@@ -4,7 +4,6 @@ networks:
     driver: bridge
 services:
   mysql:
-    container_name: multiple-wordpress-mysql
     image: 'mysql'
     ports:
       - '3306'
@@ -15,34 +14,7 @@ services:
     volumes:
       - ${mysql_data_dir}:/var/lib/mysql
       - ${docker_entrypoint_initdb_d}:/docker-entrypoint-initdb.d
-  phpfpm_1:
-    container_name: multiple-wordpress-phpfpm_1
-    image: 'bitnami/php-fpm:latest'
-    ports:
-      - '9000'
-    networks:
-      - app-tier
-    depends_on:
-      - mysql
-    volumes:
-      - ${doc_root_1}:/var/www/wordpress_1
-      - ${doc_root_2}:/var/www/wordpress_2
-      - ${doc_root_3}:/var/www/wordpress_3
-  phpfpm_2:
-    container_name: multiple-wordpress-phpfpm_2
-    image: 'bitnami/php-fpm:latest'
-    ports:
-      - '9000'
-    networks:
-      - app-tier
-    depends_on:
-      - mysql
-    volumes:
-      - ${doc_root_1}:/var/www/wordpress_1
-      - ${doc_root_2}:/var/www/wordpress_2
-      - ${doc_root_3}:/var/www/wordpress_3
-  phpfpm_3:
-    container_name: multiple-wordpress-phpfpm_3
+  phpfpm:
     image: 'bitnami/php-fpm:latest'
     ports:
       - '9000'
@@ -55,12 +27,9 @@ services:
       - ${doc_root_2}:/var/www/wordpress_2
       - ${doc_root_3}:/var/www/wordpress_3
   nginx:
-    container_name: wordpress-nginx
     image: 'bitnami/nginx:latest'
     depends_on:
-      - phpfpm_1
-      - phpfpm_2
-      - phpfpm_3
+      - phpfpm
     networks:
       - app-tier
     ports:

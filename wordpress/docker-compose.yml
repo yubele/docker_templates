@@ -39,7 +39,6 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - ./.env.conf:/bitnami/nginx/conf/env.conf
       - ./wordpress.conf:/bitnami/nginx/conf/vhosts/wordpress.conf
       - ${doc_root}:/var/www/wordpress
       - ${ssl_certificate}:/bitnami/nginx/conf/cert.pem
