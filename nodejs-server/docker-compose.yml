@@ -1,0 +1,19 @@
+version: "3"
+networks:
+  app-tier:
+    driver: bridge
+services:
+  nodejs-server:
+    tty: true
+    stdin_open: true
+    container_name: nodejs-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - ./:/var/www/docker
+    working_dir: /var/www/docker
+    ports:
+      - 8080:8080
+    networks:
+      - app-tier

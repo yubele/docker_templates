@@ -1,1 +1,5 @@
+# .env files
 /*/**/.*
+
+# intellij files
+/.idea
