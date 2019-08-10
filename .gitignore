@@ -1,5 +1,5 @@
-# .env files
-/*/**/.*
-
 # intellij files
 /.idea
+
+# laravel
+/laravel/vendor
