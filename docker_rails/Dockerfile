@@ -1,5 +1,5 @@
 # define ubuntu version, you can use --build-arg
-ARG ubuntu_version="18.10"
+ARG ubuntu_version="19.10"
 FROM ubuntu:${ubuntu_version}
 
 # Dockerfile on bash
@@ -19,7 +19,7 @@ RUN sed -i 's@archive.ubuntu.com@ftp.jaist.ac.jp/pub/Linux@g' /etc/apt/sources.l
 
 # install packages
 RUN apt update \
-  && apt install --no-install-recommends -y gnupg2 gnupg1 gnupg git curl libmecab-dev libmagickwand-dev openjdk-8-jdk graphicsmagick graphviz nginx
+  && apt install --no-install-recommends -y gnupg2 gnupg1 gnupg git curl libmecab-dev mecab-ipadic mecab-ipadic-utf8 mecab-utils libmagickwand-dev openjdk-8-jdk graphicsmagick graphviz nginx
 
 # install yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
